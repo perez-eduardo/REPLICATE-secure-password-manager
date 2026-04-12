@@ -9,11 +9,13 @@ with multi-factor authentication, and securely manage credentials through a
 browser-based interface.
 
 ## Project Structure
+```
 secure-password-manager/
 ├── .github/workflows/    # GitHub Actions auto-deploy workflows
 ├── frontend/             # React SPA (Matthew)
 ├── backend/              # Express/Node.js API (Thania)
 └── totp/                 # TOTP/Speakeasy service (Thania + Eduardo)
+```
 
 ## Branching Convention
 - `main` — protected, merge via PR with 1 approval only
