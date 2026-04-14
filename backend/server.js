@@ -1,0 +1,23 @@
+require("dotenv").config();
+const express = require("express");
+const mongoose = require("mongoose");
+const authRoutes = require("./routes/authRoutes");
+
+const app = express();
+
+mongoose.connect("mongodb://127.0.0.1:27017/password-manager")
+  .then(() => console.log("MongoDB connected"))
+  .catch((err) => console.error("MongoDB connection error:", err));
+
+app.use(express.json());
+app.use("/api/auth", authRoutes);
+
+app.get("/", (req, res) => {
+  res.send("API is running...");
+});
+
+const PORT = process.env.PORT || 5000;
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
