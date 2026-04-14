@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
 
 const credentialSchema = new mongoose.Schema({
   userId: {
@@ -27,4 +27,4 @@ const credentialSchema = new mongoose.Schema({
   },
 }, { timestamps: true });
 
-export default mongoose.model("Credentials", credentialSchema);
+module.exports = mongoose.model("Credentials", credentialSchema);
