@@ -1,2 +1,0 @@
-Backend auto-deploy smoke test.
-Non-functional change to trigger backend GitHub Actions workflow.
