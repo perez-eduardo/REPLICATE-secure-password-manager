@@ -16,10 +16,6 @@ export default function Login() {
         </div>
         <p className={styles.subtitle}>Sign in to your vault</p>
 
-        <p style={{ background: "#d4edda", color: "#155724", padding: "10px", borderRadius: "8px", fontSize: "13px", textAlign: "center" }}>
-          REPLICATE auto-deploy works!
-        </p>
-
         <div className={styles.field}>
           <label className={styles.label}>Email</label>
           <input
