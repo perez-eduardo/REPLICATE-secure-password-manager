@@ -2,8 +2,16 @@ const express = require("express");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
+const { setupMFA, verifyMFA} = require("../controllers/authController");
+const authMiddleware = require("../middleware/authMiddleware");
 
 const router = express.Router();
+
+// MFA SETUP
+router.post("/mfa/setup", authMiddleware, setupMFA);
+
+// MFA VERIFY
+router.post("/mfa/verify", authMiddleware, verifyMFA);
 
 // REGISTER
 router.post("/register", async (req, res) => {
