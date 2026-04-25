@@ -1,1 +1,4 @@
+Backend auto-deploy smoke test.
+Non-functional change to trigger backend GitHub Actions workflow.
+Attempt # 3 - post systemd unit and .env relocation on team backend EC2.
 Attempt # 4 - post .env relocation to /etc/secure-password-manager-backend/.
