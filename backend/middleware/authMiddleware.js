@@ -1,7 +1,5 @@
 /** Auth Middleware
- * Verified JWT token from Authorization header
- * Ensures only authenticated users can access protected routes (like MFA setup).
- * Attackes the authenticator user to req.user.
+ * This middleware file checks for a valid JWT token in the Authorization header of incoming requests.
  */
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
