@@ -1,11 +1,34 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import styles from "../styles/Login.module.css";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+
+  const handleLogin = async () => {
+    setError("");
+    setLoading(true);
+    try {
+      const { data } = await axios.post("/api/auth/login", { email, password });
+
+      if (data.requireMFA) {
+        localStorage.setItem("userId", data.userId);
+        navigate("/mfa");
+      } else {
+        localStorage.setItem("token", data.token);
+        navigate("/vault");
+      }
+    } catch (err) {
+      setError(err.response?.data?.message || "Login failed");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className={styles.page}>
@@ -35,14 +58,18 @@ export default function Login() {
             placeholder="••••••••••••"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && handleLogin()}
           />
         </div>
 
+        {error && <p className={styles.error}>{error}</p>}
+
         <button
           className={styles.button}
-          onClick={() => navigate("/mfa")}
+          onClick={handleLogin}
+          disabled={loading}
         >
-          Sign In
+          {loading ? "Signing in..." : "Sign In"}
         </button>
 
         <p className={styles.footer}>

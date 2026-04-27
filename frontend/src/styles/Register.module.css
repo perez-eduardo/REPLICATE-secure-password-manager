@@ -93,6 +93,17 @@
   background-color: #333;
 }
 
+.button:disabled {
+  background-color: #999;
+  cursor: not-allowed;
+}
+
+.error {
+  color: #cc0000;
+  font-size: 13px;
+  margin-bottom: 8px;
+}
+
 .footer {
   text-align: center;
   font-size: 13px;
