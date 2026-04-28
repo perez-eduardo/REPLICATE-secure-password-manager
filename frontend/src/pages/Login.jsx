@@ -19,9 +19,9 @@ export default function Login() {
       if (data.requireMFA) {
         localStorage.setItem("userId", data.userId);
         navigate("/mfa");
-      } else {
-        localStorage.setItem("token", data.token);
-        navigate("/vault");
+      } else if (data.requireMFASetup) {
+        localStorage.setItem("userId", data.userId);
+        navigate("/mfa-setup");
       }
     } catch (err) {
       setError(err.response?.data?.message || "Login failed");

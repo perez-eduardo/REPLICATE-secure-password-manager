@@ -22,7 +22,7 @@ export default function Register() {
     setLoading(true);
     try {
       const { data } = await axios.post("/api/auth/register", { email, password });
-      localStorage.setItem("userId", data.user._id);
+      localStorage.setItem("userId", data.userId);
       navigate("/mfa-setup");
     } catch (err) {
       setError(err.response?.data?.message || "Registration failed");

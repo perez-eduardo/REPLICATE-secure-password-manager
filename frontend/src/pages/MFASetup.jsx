@@ -14,7 +14,7 @@ export default function MFASetup() {
   useEffect(() => {
     const userId = localStorage.getItem("userId");
     if (!userId) {
-      navigate("/register");
+      navigate("/login");
       return;
     }
 
