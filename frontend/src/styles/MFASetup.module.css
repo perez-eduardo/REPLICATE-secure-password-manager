@@ -14,13 +14,11 @@
   padding: 40px;
   width: 100%;
   max-width: 400px;
-  text-align: center;
 }
 
 .logoRow {
   display: flex;
   align-items: center;
-  justify-content: center;
   gap: 10px;
   margin-bottom: 4px;
 }
@@ -47,13 +45,32 @@
 .subtitle {
   color: #888;
   font-size: 14px;
-  margin-bottom: 28px;
+  margin-bottom: 20px;
   margin-top: 4px;
+}
+
+.instructions {
+  font-size: 13px;
+  color: #555;
+  margin-bottom: 16px;
+  line-height: 1.5;
+}
+
+.qrWrapper {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.qrCode {
+  width: 180px;
+  height: 180px;
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
 }
 
 .field {
   margin-bottom: 16px;
-  text-align: left;
 }
 
 .label {
@@ -69,12 +86,12 @@
   padding: 10px 12px;
   border-radius: 8px;
   border: 1px solid #e5e5e5;
-  font-size: 20px;
+  font-size: 14px;
   outline: none;
   box-sizing: border-box;
-  font-family: monospace;
+  font-family: inherit;
+  letter-spacing: 4px;
   text-align: center;
-  letter-spacing: 8px;
 }
 
 .input:focus {
@@ -112,5 +129,6 @@
 .hint {
   font-size: 13px;
   color: #888;
-  margin-top: 20px;
+  text-align: center;
+  margin-bottom: 16px;
 }

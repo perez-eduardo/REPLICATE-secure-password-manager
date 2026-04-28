@@ -1,6 +1,5 @@
 const express = require("express");
 const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 
 const router = express.Router();
@@ -49,22 +48,11 @@ router.post("/login", async (req, res) => {
       return res.status(400).json({ message: "Invalid credentials" });
     }
 
-    //  MFA check
     if (user.mfaEnabled) {
-      return res.json({
-        requireMFA: true,
-        userId: user._id
-      });
+      return res.json({ requireMFA: true, userId: user._id });
     }
 
-    // Normal login
-    const token = jwt.sign(
-      { userId: user._id },
-      process.env.JWT_SECRET,
-      { expiresIn: "1h" }
-    );
-
-    res.json({ message: "Login successful", token });
+    return res.json({ requireMFASetup: true, userId: user._id });
 
   } catch (err) {
     console.error(err);

@@ -1,16 +1,27 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import styles from "../styles/MFAPrompt.module.css";
+import styles from "../styles/MFASetup.module.css";
 
-export default function MFAPrompt() {
+export default function MFASetup() {
+  const [qrCode, setQrCode] = useState(null);
   const [code, setCode] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [fetching, setFetching] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!localStorage.getItem("userId")) navigate("/login");
+    const userId = localStorage.getItem("userId");
+    if (!userId) {
+      navigate("/login");
+      return;
+    }
+
+    axios.post("/totp/setup", { userId })
+      .then(({ data }) => setQrCode(data.qrCode))
+      .catch(() => setError("Failed to generate QR code. Please try again."))
+      .finally(() => setFetching(false));
   }, [navigate]);
 
   const handleVerify = async () => {
@@ -36,9 +47,20 @@ export default function MFAPrompt() {
           <div className={styles.logo}>🔐</div>
           <h1 className={styles.title}>Password Vault</h1>
         </div>
-        <p className={styles.subtitle}>
-          Enter the 6-digit code from your authenticator app
-        </p>
+        <p className={styles.subtitle}>Set up two-factor authentication</p>
+
+        {fetching && <p className={styles.hint}>Generating QR code...</p>}
+
+        {qrCode && (
+          <>
+            <p className={styles.instructions}>
+              Scan this QR code with your authenticator app, then enter the 6-digit code below to confirm setup.
+            </p>
+            <div className={styles.qrWrapper}>
+              <img src={qrCode} alt="MFA QR Code" className={styles.qrCode} />
+            </div>
+          </>
+        )}
 
         <div className={styles.field}>
           <label className={styles.label}>Authentication Code</label>
@@ -58,14 +80,10 @@ export default function MFAPrompt() {
         <button
           className={styles.button}
           onClick={handleVerify}
-          disabled={loading || code.length !== 6}
+          disabled={loading || fetching || code.length !== 6}
         >
-          {loading ? "Verifying..." : "Verify"}
+          {loading ? "Verifying..." : "Confirm Setup"}
         </button>
-
-        <p className={styles.hint}>
-          Open your authenticator app to view your code
-        </p>
       </div>
     </div>
   );

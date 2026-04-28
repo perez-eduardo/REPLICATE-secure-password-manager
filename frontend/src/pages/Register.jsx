@@ -1,12 +1,35 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import styles from "../styles/Register.module.css";
 
 export default function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+
+  const handleRegister = async () => {
+    setError("");
+
+    if (password !== confirm) {
+      setError("Passwords do not match");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const { data } = await axios.post("/api/auth/register", { email, password });
+      localStorage.setItem("userId", data.userId);
+      navigate("/mfa-setup");
+    } catch (err) {
+      setError(err.response?.data?.message || "Registration failed");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className={styles.page}>
@@ -47,14 +70,18 @@ export default function Register() {
             placeholder="••••••••••••"
             value={confirm}
             onChange={(e) => setConfirm(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && handleRegister()}
           />
         </div>
 
+        {error && <p className={styles.error}>{error}</p>}
+
         <button
           className={styles.button}
-          onClick={() => navigate("/mfa")}
+          onClick={handleRegister}
+          disabled={loading}
         >
-          Create Account
+          {loading ? "Creating account..." : "Create Account"}
         </button>
 
         <p className={styles.footer}>
