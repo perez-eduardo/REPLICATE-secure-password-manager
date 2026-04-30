@@ -25,7 +25,10 @@ router.post("/register", async (req, res) => {
       masterPasswordHash: hashedPassword,
     });
 
-    res.status(201).json({ message: "User created", user });
+    res.status(201).json({
+      message: "User created",
+      userId: user._id
+    });
 
   } catch (err) {
     console.error(err);
@@ -39,15 +42,53 @@ router.post("/login", async (req, res) => {
     const { email, password } = req.body;
 
     const user = await User.findOne({ email });
+
     if (!user) {
-      return res.status(400).json({ message: "Invalid credentials" });
+      return res.status(401).json({ message: "Invalid credentials" });
     }
 
+    // Check if account is locked 
+    if (user.lockoutUntil && user.lockoutUntil > Date.now()) {
+      return res.status(403).json({
+        message: "Account locked due to too many failed attempts. Try again later."
+      });
+    }
+
+    // Reset lockout if expired
+    if (user.lockoutUntil && user.lockoutUntil <= Date.now()) {
+      user.failedLoginAttempts = 0;
+      user.lockoutUntil = null;
+      await user.save();
+    }
+
+    // Check password
     const isMatch = await bcrypt.compare(password, user.masterPasswordHash);
+
     if (!isMatch) {
-      return res.status(400).json({ message: "Invalid credentials" });
+      const updated = await User.findOneAndUpdate(
+        { _id: user._id },
+        { $inc: { failedLoginAttempts: 1 } },
+        { new: true }
+    );
+
+    if (updated.failedLoginAttempts >= 5) {
+      updated.lockoutUntil = Date.now() + 15 * 60 * 1000;
+      await updated.save();
+
+      return res.status(403).json({
+        message: "Account locked due to too many failed attempts."
+      });
     }
 
+  return res.status(401).json({ message: "Invalid credentials" });
+}
+    // Successful login and reset counters
+    user.failedLoginAttempts = 0;
+    user.lockoutUntil = null;
+
+    await user.save();
+
+    // MFA logic
     if (user.mfaEnabled) {
       return res.json({ requireMFA: true, userId: user._id });
     }
@@ -59,5 +100,4 @@ router.post("/login", async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 });
-
 module.exports = router;
