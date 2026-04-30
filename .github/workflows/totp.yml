@@ -14,7 +14,7 @@ concurrency:
 
 jobs:
   deploy:
-    runs-on: [self-hosted, linux, x64, totp-ec2-replicate]
+    runs-on: [self-hosted, linux, x64, totp-ec2]
 
     steps:
       - name: Checkout repository
