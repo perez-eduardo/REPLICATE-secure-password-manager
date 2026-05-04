@@ -29,11 +29,27 @@ export default function Vault() {
   const [search, setSearch] = useState("");
   const [activeFilter, setActiveFilter] = useState("All");
   const [showGenerator, setShowGenerator] = useState(false);
+  const [showLockConfirm, setShowLockConfirm] = useState(false);
   const navigate = useNavigate();
 
   return (
     <div className={styles.page}>
       {showGenerator && <PasswordGenerator onClose={() => setShowGenerator(false)} />}
+
+      {showLockConfirm && (
+        <div className={styles.modalOverlay}>
+          <div className={styles.confirmModal}>
+            <Lock size={28} />
+            <h2>Lock Vault?</h2>
+            <p>You'll be returned to the sign-in portal.</p>
+            <div className={styles.confirmActions}>
+              <button className={styles.cancelBtn} onClick={() => setShowLockConfirm(false)}>Cancel</button>
+              <button className={styles.confirmLockBtn} onClick={() => { localStorage.removeItem("token"); navigate("/login"); }}>Lock Vault</button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Header */}
       <div className={styles.header}>
         <div className={styles.headerLeft}>
@@ -44,11 +60,9 @@ export default function Vault() {
           </div>
         </div>
         <div className={styles.headerRight}>
-          <button className={styles.headerBtn} onClick={() => setShowGenerator(true)}><Key size={14} /> Generate</button>
-          <button className={styles.headerBtn} onClick={() => navigate("/login")}>
-            <Lock size={14} /> Lock
-          </button>
-          <button className={styles.addBtn}><Plus size={14} /> Add Password</button>
+          <button className={styles.addBtn}><Plus size={14} /> Add</button>
+          <button className={styles.headerBtn} onClick={() => setShowGenerator(true)}><Key size={14} /> Generate Password</button>
+          <button className={styles.lockBtn} onClick={() => setShowLockConfirm(true)}><Lock size={14} /> Lock</button>
         </div>
       </div>
 
@@ -59,7 +73,7 @@ export default function Vault() {
           <input
             className={styles.searchBox}
             type="text"
-            placeholder="Search passwords..."
+            placeholder="Search..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
