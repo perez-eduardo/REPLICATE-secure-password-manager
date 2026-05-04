@@ -33,7 +33,7 @@ function generatePassword(length, options) {
   return all.join("");
 }
 
-export default function PasswordGenerator({ onClose }) {
+export default function PasswordGenerator({ onClose, onSaveToVault }) {
   const [length, setLength] = useState(16);
   const [options, setOptions] = useState({
     uppercase: true,
@@ -124,7 +124,7 @@ export default function PasswordGenerator({ onClose }) {
           <button className={styles.generateBtn} onClick={generate}>
             <RefreshCw size={14} /> Regenerate
           </button>
-          <button className={styles.saveBtn}>
+          <button className={styles.saveBtn} onClick={() => onSaveToVault(password)}>
             Save to Vault
           </button>
         </div>

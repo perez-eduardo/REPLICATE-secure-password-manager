@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import styles from "../styles/Login.module.css";
 
-export default function Login() {
+export default function Login({ setMasterPassword }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -17,9 +17,11 @@ export default function Login() {
       const { data } = await axios.post("/api/auth/login", { email, password });
 
       if (data.requireMFA) {
+        setMasterPassword(password);
         localStorage.setItem("userId", data.userId);
         navigate("/mfa");
       } else if (data.requireMFASetup) {
+        setMasterPassword(password);
         localStorage.setItem("userId", data.userId);
         navigate("/mfa-setup");
       }

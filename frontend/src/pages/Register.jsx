@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import styles from "../styles/Register.module.css";
 
-export default function Register() {
+export default function Register({ setMasterPassword }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
@@ -22,6 +22,7 @@ export default function Register() {
     setLoading(true);
     try {
       const { data } = await axios.post("/api/auth/register", { email, password });
+      setMasterPassword(password);
       localStorage.setItem("userId", data.userId);
       navigate("/mfa-setup");
     } catch (err) {
