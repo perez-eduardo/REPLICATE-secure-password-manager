@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import styles from "../styles/Vault.module.css";
-import { Key, Lock, Plus, Pencil, Trash2, Copy, Check, Eye, ExternalLink } from "lucide-react";
+import { Key, Lock, Plus, Pencil, Trash2, Copy, Check, Eye, EyeOff, ExternalLink } from "lucide-react";
 import PasswordGenerator from "../components/PasswordGenerator";
 import { encrypt, decrypt } from "../utils/crypto";
 
@@ -33,6 +33,8 @@ export default function Vault({ masterPassword, setMasterPassword }) {
   const [unlocking, setUnlocking] = useState(false);
   const [unlockInput, setUnlockInput] = useState("");
   const [unlockError, setUnlockError] = useState("");
+  const [showAddPassword, setShowAddPassword] = useState(false);
+  const [showEditPassword, setShowEditPassword] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -55,20 +57,24 @@ export default function Vault({ masterPassword, setMasterPassword }) {
           headers: { Authorization: `Bearer ${token}` },
         });
 
-        const decrypted = data.map((cred) => {
-          const { username, password } = JSON.parse(
-            decrypt(cred.encryptedData.ciphertext, cred.encryptedData.iv, cred.encryptedData.salt, masterPassword)
-          );
-          return { ...cred, username, password };
-        });
+        let decrypted;
+        try {
+          decrypted = data.map((cred) => {
+            const { username, password } = JSON.parse(
+              decrypt(cred.encryptedData.ciphertext, cred.encryptedData.iv, cred.encryptedData.salt, masterPassword)
+            );
+            return { ...cred, username, password };
+          });
+        } catch {
+          setMasterPassword("");
+          setUnlockError("Incorrect master password. Try again.");
+          return;
+        }
 
         setCredentials(decrypted);
       } catch (err) {
         if (err.response?.status === 401) {
           navigate("/login");
-        } else if (!err.response) {
-          setMasterPassword("");
-          setUnlockError("Incorrect master password. Try again.");
         } else {
           setError("Failed to load credentials");
         }
@@ -78,7 +84,7 @@ export default function Vault({ masterPassword, setMasterPassword }) {
     };
 
     fetchCredentials();
-  }, [masterPassword]);
+  }, [masterPassword, navigate]);
 
   const togglePasswordVisibility = (id) => {
     setVisiblePasswords((prev) => ({ ...prev, [id]: !prev[id] }));
@@ -140,6 +146,7 @@ export default function Vault({ masterPassword, setMasterPassword }) {
     setEditingCred(cred);
     setEditForm({ title: cred.title, username: cred.username, password: cred.password, website: cred.website || "", category: cred.category });
     setEditError("");
+    setShowEditPassword(false);
   };
 
   const handleEdit = async () => {
@@ -231,6 +238,7 @@ export default function Vault({ masterPassword, setMasterPassword }) {
           onSaveToVault={(generatedPassword) => {
             setShowGenerator(false);
             setAddForm({ title: "", username: "", password: generatedPassword, website: "", category: "other" });
+            setShowAddPassword(false);
             setShowAddForm(true);
           }}
         />
@@ -250,7 +258,17 @@ export default function Vault({ masterPassword, setMasterPassword }) {
             </div>
             <div className={styles.formField}>
               <label>Password</label>
-              <input type="text" placeholder="••••••••••••" value={addForm.password} onChange={(e) => setAddForm({ ...addForm, password: e.target.value })} />
+              <div className={styles.passwordWrapper}>
+                <input
+                  type={showAddPassword ? "text" : "password"}
+                  placeholder="••••••••••••"
+                  value={addForm.password}
+                  onChange={(e) => setAddForm({ ...addForm, password: e.target.value })}
+                />
+                <button className={styles.eyeToggle} onClick={() => setShowAddPassword((v) => !v)}>
+                  {showAddPassword ? <EyeOff size={14} /> : <Eye size={14} />}
+                </button>
+              </div>
             </div>
             <div className={styles.formField}>
               <label>Website <span className={styles.optional}>(optional)</span></label>
@@ -268,7 +286,7 @@ export default function Vault({ masterPassword, setMasterPassword }) {
             </div>
             {addError && <p className={styles.formError}>{addError}</p>}
             <div className={styles.confirmActions}>
-              <button className={styles.cancelBtn} onClick={() => { setShowAddForm(false); setAddError(""); setAddForm({ title: "", username: "", password: "", website: "", category: "other" }); }}>Cancel</button>
+              <button className={styles.cancelBtn} onClick={() => { setShowAddForm(false); setAddError(""); setAddForm({ title: "", username: "", password: "", website: "", category: "other" }); setShowAddPassword(false); }}>Cancel</button>
               <button className={styles.submitBtn} onClick={handleAdd} disabled={addLoading}>
                 {addLoading ? "Saving..." : "Save"}
               </button>
@@ -291,7 +309,16 @@ export default function Vault({ masterPassword, setMasterPassword }) {
             </div>
             <div className={styles.formField}>
               <label>Password</label>
-              <input type="password" value={editForm.password} onChange={(e) => setEditForm({ ...editForm, password: e.target.value })} />
+              <div className={styles.passwordWrapper}>
+                <input
+                  type={showEditPassword ? "text" : "password"}
+                  value={editForm.password}
+                  onChange={(e) => setEditForm({ ...editForm, password: e.target.value })}
+                />
+                <button className={styles.eyeToggle} onClick={() => setShowEditPassword((v) => !v)}>
+                  {showEditPassword ? <EyeOff size={14} /> : <Eye size={14} />}
+                </button>
+              </div>
             </div>
             <div className={styles.formField}>
               <label>Website <span className={styles.optional}>(optional)</span></label>
@@ -359,7 +386,7 @@ export default function Vault({ masterPassword, setMasterPassword }) {
           </div>
         </div>
         <div className={styles.headerRight}>
-          <button className={styles.addBtn} onClick={() => setShowAddForm(true)}><Plus size={14} /> Add</button>
+          <button className={styles.addBtn} onClick={() => { setShowAddForm(true); setShowAddPassword(false); }}><Plus size={14} /> Add</button>
           <button className={styles.headerBtn} onClick={() => setShowGenerator(true)}><Key size={14} /> Generate Password</button>
           <button className={styles.lockBtn} onClick={() => setShowLockConfirm(true)}><Lock size={14} /> Lock</button>
         </div>

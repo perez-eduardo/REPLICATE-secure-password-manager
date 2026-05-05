@@ -391,6 +391,34 @@
   color: #111;
 }
 
+.passwordWrapper {
+  position: relative;
+}
+
+.passwordWrapper input {
+  width: 100%;
+  box-sizing: border-box;
+  padding-right: 36px;
+}
+
+.eyeToggle {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #888;
+  padding: 2px;
+  display: flex;
+  align-items: center;
+}
+
+.eyeToggle:hover {
+  color: #111;
+}
+
 .formField input:focus,
 .formField select:focus {
   border-color: #111;
