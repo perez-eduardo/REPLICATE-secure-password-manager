@@ -86,6 +86,130 @@
   background-color: #333;
 }
 
+.lockBtn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: 1px solid #e5e5e5;
+  background-color: #fff;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  color: #333;
+}
+
+.lockBtn:hover {
+  background-color: #f5f5f5;
+}
+
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.unlockModal {
+  background: #fff;
+  border-radius: 12px;
+  padding: 32px;
+  width: 360px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  text-align: center;
+}
+
+.unlockModal h2 {
+  font-size: 18px;
+  font-weight: 700;
+  color: #111;
+  margin: 0;
+}
+
+.unlockModal p {
+  font-size: 14px;
+  color: #666;
+  margin: 0;
+}
+
+.unlockModal .formField {
+  width: 100%;
+  text-align: left;
+}
+
+.unlockModal .submitBtn {
+  width: 100%;
+  padding: 10px;
+}
+
+.confirmModal {
+  background: #fff;
+  border-radius: 12px;
+  padding: 32px;
+  width: 340px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  text-align: center;
+}
+
+.confirmModal h2 {
+  font-size: 18px;
+  font-weight: 700;
+  color: #111;
+  margin: 0;
+}
+
+.confirmModal p {
+  font-size: 14px;
+  color: #666;
+  margin: 0;
+}
+
+.confirmActions {
+  display: flex;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.cancelBtn {
+  padding: 8px 20px;
+  border-radius: 8px;
+  border: 1px solid #e5e5e5;
+  background-color: #fff;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  color: #333;
+}
+
+.cancelBtn:hover {
+  background-color: #f5f5f5;
+}
+
+.confirmLockBtn {
+  padding: 8px 20px;
+  border-radius: 8px;
+  border: none;
+  background-color: #dc2626;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.confirmLockBtn:hover {
+  background-color: #b91c1c;
+}
+
 .content {
   max-width: 860px;
   margin: 32px auto;
@@ -95,12 +219,13 @@
 .searchFilterRow {
   display: flex;
   align-items: center;
-  gap: 12px;
+  justify-content: space-between;
   margin-bottom: 24px;
 }
 
 .searchBox {
-  flex: 1;
+  width: 280px;
+  margin-right: 32px;
   padding: 10px 14px;
   border-radius: 8px;
   border: 1px solid #e5e5e5;
@@ -224,4 +349,138 @@
 .fieldActions {
   display: flex;
   gap: 6px;
+}
+
+.formModal {
+  background: #fff;
+  border-radius: 12px;
+  padding: 32px;
+  width: 420px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.formModal h2 {
+  font-size: 18px;
+  font-weight: 700;
+  color: #111;
+  margin: 0;
+}
+
+.formField {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.formField label {
+  font-size: 13px;
+  font-weight: 500;
+  color: #333;
+}
+
+.formField input,
+.formField select {
+  padding: 9px 12px;
+  border-radius: 8px;
+  border: 1px solid #e5e5e5;
+  font-size: 13px;
+  font-family: inherit;
+  outline: none;
+  color: #111;
+}
+
+.passwordWrapper {
+  position: relative;
+}
+
+.passwordWrapper input {
+  width: 100%;
+  box-sizing: border-box;
+  padding-right: 36px;
+}
+
+.eyeToggle {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #888;
+  padding: 2px;
+  display: flex;
+  align-items: center;
+}
+
+.eyeToggle:hover {
+  color: #111;
+}
+
+.formField input:focus,
+.formField select:focus {
+  border-color: #111;
+}
+
+.optional {
+  font-size: 12px;
+  color: #aaa;
+  font-weight: 400;
+}
+
+.formError {
+  font-size: 13px;
+  color: #dc2626;
+  margin: 0;
+}
+
+.submitBtn {
+  padding: 8px 20px;
+  border-radius: 8px;
+  border: none;
+  background-color: #111;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.submitBtn:hover {
+  background-color: #333;
+}
+
+.submitBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.successToast {
+  position: fixed;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #111;
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  z-index: 200;
+  pointer-events: none;
+}
+
+.statusMsg {
+  font-size: 14px;
+  color: #888;
+  text-align: center;
+  margin-top: 48px;
+}
+
+.errorMsg {
+  font-size: 14px;
+  color: #dc2626;
+  text-align: center;
+  margin-top: 48px;
 }
