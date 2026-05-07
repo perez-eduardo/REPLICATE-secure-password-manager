@@ -5,6 +5,7 @@ import styles from "../styles/Vault.module.css";
 import { Key, Lock, Plus, Pencil, Trash2, Copy, Check, Eye, EyeOff, ExternalLink } from "lucide-react";
 import PasswordGenerator from "../components/PasswordGenerator";
 import { encrypt, decrypt } from "../utils/crypto";
+import { copyToClipboard } from "../utils/clipboard";
 
 const FILTERS = ["All", "Personal", "Work", "Finance", "Social", "Other"];
 
@@ -91,7 +92,7 @@ export default function Vault({ masterPassword, setMasterPassword }) {
   };
 
   const handleCopy = (text, id, field) => {
-    navigator.clipboard.writeText(text);
+    copyToClipboard(text);
     setCopiedField({ id, field });
     setTimeout(() => setCopiedField(null), 2000);
   };
