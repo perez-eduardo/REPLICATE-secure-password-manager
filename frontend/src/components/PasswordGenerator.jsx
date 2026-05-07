@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { X, Copy, RefreshCw } from "lucide-react";
 import styles from "../styles/PasswordGenerator.module.css";
+import { copyToClipboard } from "../utils/clipboard";
 
 const CHARSETS = {
   uppercase: "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
@@ -54,7 +55,7 @@ export default function PasswordGenerator({ onClose, onSaveToVault }) {
   }, [generate]);
 
   const handleCopy = () => {
-    navigator.clipboard.writeText(password);
+    copyToClipboard(password);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
